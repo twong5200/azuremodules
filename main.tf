@@ -9,6 +9,7 @@ module "resource_group" {
   vnet_address_space  = var.vnet_address_space
   subnets             = var.subnets
   create_gateway_subnet = var.create_gateway_subnet
+ }
 }
 
 module "nsg" {
