@@ -1,6 +1,11 @@
-variable "resource_group_name" {
+variable "resource_group_name_1" {
   type    = string
-  default = "myResourceGroup"
+  default = "myResourceGroup1"
+}
+
+variable "resource_group_name_2" {
+  type    = string
+  default = "myResourceGroup2"
 }
 
 variable "location" {
