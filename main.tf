@@ -1,59 +1,32 @@
-terraform {
-  required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "~> 3.0"
-    }
-  }
-  required_version = ">= 1.0.0"
-}
-
 provider "azurerm" {
   features {}
 }
 
 module "resource_group" {
-  source   = "./modules/resource_group"
-  name     = var.resource_group_name
+  source = "./modules/resource_group"
+  resource_group_name = var.resource_group_name
   location = var.location
-  tags     = var.tags
 }
 
-module "networking" {
-  source               = "./modules/networking"
+module "network" {
+  source              = "./modules/network"
+  resource_group_name = module.resource_group.resource_group_name
   vnet_name           = var.vnet_name
-  resource_group_name = module.resource_group.name
-  location            = module.resource_group.location
   address_space       = var.address_space
-  subnet_prefixes     = var.subnet_prefixes
-  subnet_names        = var.subnet_names
-  gateway_subnet_prefix = var.gateway_subnet_prefix
-  tags                = var.tags
-
-  depends_on = [module.resource_group]
+  subnets             = var.subnets
+  location            = var.location
 }
 
-module "security" {
-  source              = "./modules/security"
-  resource_group_name = module.resource_group.name
-  location            = module.resource_group.location
-  vnet_name          = module.networking.vnet_name
-  subnet_ids         = module.networking.subnet_ids
-  tags               = var.tags
-
-  depends_on = [module.networking]
+module "nsg" {
+  source              = "./modules/nsg"
+  resource_group_name = module.resource_group.resource_group_name
+  nsg_name            = var.nsg_name
+  location            = var.location
 }
 
-module "gateway" {
-  source              = "./modules/gateway"
-  resource_group_name = module.resource_group.name
-  location            = module.resource_group.location
-  vnet_name          = module.networking.vnet_name
-  gateway_subnet_id   = module.networking.gateway_subnet_id
-  gateway_type       = var.gateway_type
-  vpn_type           = var.vpn_type
-  sku                = var.gateway_sku
-  tags               = var.tags
-
-  depends_on = [module.networking]
+module "route_table" {
+  source              = "./modules/route_table"
+  resource_group_name = module.resource_group.resource_group_name
+  route_table_name    = var.route_table_name
+  location            = var.location
 }

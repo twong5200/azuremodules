@@ -1,59 +1,46 @@
 variable "resource_group_name" {
-  description = "Name of the resource group"
-  type        = string
+  type    = string
+  default = "myResourceGroup"
 }
 
 variable "location" {
-  description = "Azure region to deploy resources"
-  type        = string
+  type    = string
+  default = "East US"
 }
 
 variable "vnet_name" {
-  description = "Name of the virtual network"
-  type        = string
+  type    = string
+  default = "myVnet"
 }
 
 variable "address_space" {
-  description = "Address space for the virtual network"
-  type        = list(string)
+  type    = list(string)
+  default = ["10.0.0.0/16"]
 }
 
-variable "subnet_prefixes" {
-  description = "Address prefixes for subnets"
-  type        = list(string)
+variable "subnets" {
+  type = list(object({
+    name          = string
+    address_prefix = string
+  }))
+  default = [
+    {
+      name          = "subnet1"
+      address_prefix = "10.0.1.0/24"
+    },
+    {
+      name          = "subnet2"
+      address_prefix = "10.0.2.0/24"
+    }
+  ]
 }
 
-variable "subnet_names" {
-  description = "Names of the subnets"
-  type        = list(string)
+variable "nsg_name" {
+  type    = string
+  default = "myNSG"
 }
 
-variable "gateway_subnet_prefix" {
-  description = "Address prefix for the gateway subnet"
-  type        = string
-  default     = "10.0.255.0/24"
-}
-
-variable "gateway_type" {
-  description = "Type of the Virtual Network Gateway (Vpn or ExpressRoute)"
-  type        = string
-  default     = "Vpn"
-}
-
-variable "vpn_type" {
-  description = "Type of VPN Gateway (RouteBased or PolicyBased)"
-  type        = string
-  default     = "RouteBased"
-}
-
-variable "gateway_sku" {
-  description = "SKU of the Virtual Network Gateway"
-  type        = string
-  default     = "VpnGw1"
-}
-
-variable "tags" {
-  description = "Tags to apply to resources"
-  type        = map(string)
-  default     = {}
+variable "route_table_name" {
+  type    = string
+  default = "myRouteTable"
 }
