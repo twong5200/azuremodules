@@ -8,8 +8,18 @@ variable "location" {
   type        = string
 }
 
-variable "route_table_name" {
-  description = "Name of the route table"
+variable "vnet_name" {
+  description = "Name of the virtual network"
+  type        = string
+}
+
+variable "gateway_name" {
+  description = "Name of the virtual network gateway"
+  type        = string
+}
+
+variable "gateway_subnet_id" {
+  description = "ID of the gateway subnet"
   type        = string
 }
 

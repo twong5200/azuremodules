@@ -13,25 +13,9 @@ variable "vnet_name" {
   type        = string
 }
 
-variable "address_space" {
-  description = "Address space for the virtual network"
-  type        = list(string)
-}
-
-variable "subnet_prefixes" {
-  description = "Address prefixes for subnets"
-  type        = list(string)
-}
-
-variable "subnet_names" {
-  description = "Names of the subnets"
-  type        = list(string)
-}
-
-variable "gateway_subnet_prefix" {
-  description = "Address prefix for the gateway subnet"
+variable "gateway_subnet_id" {
+  description = "ID of the gateway subnet"
   type        = string
-  default     = "10.0.255.0/24"
 }
 
 variable "gateway_type" {
@@ -46,7 +30,7 @@ variable "vpn_type" {
   default     = "RouteBased"
 }
 
-variable "gateway_sku" {
+variable "sku" {
   description = "SKU of the Virtual Network Gateway"
   type        = string
   default     = "VpnGw1"

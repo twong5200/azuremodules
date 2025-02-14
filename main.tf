@@ -1,27 +1,55 @@
+terraform {
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "~> 3.0"
+    }
+  }
+  required_version = ">= 1.0.0"
+}
+
+provider "azurerm" {
+  features {}
+}
+
 module "resource_group" {
-  source              = "./modules/resource_group"
-  rg_name             = var.rg_name
-  rg_location         = var.rg_location
-  module "virtual_network" {
-  source              = "./modules/virtual_network"
-  vnet_name           = var.vnet_name
-  vnet_location       = module.resource_group.rg_location
-  vnet_address_space  = var.vnet_address_space
-  subnets             = var.subnets
-  create_gateway_subnet = var.create_gateway_subnet
- }
+  source   = "./modules/resource_group"
+  name     = var.resource_group_name
+  location = var.location
+  tags     = var.tags
 }
 
-module "nsg" {
-  source              = "./modules/nsg"
-  nsg_name            = var.nsg_name
-  nsg_location        = module.resource_group.rg_location
-  nsg_rules           = var.nsg_rules
+module "networking" {
+  source              = "./modules/networking"
+  resource_group_name = module.resource_group.name
+  location           = module.resource_group.location
+  vnet_name          = var.vnet_name
+  address_space      = var.address_space
+  subnet_prefixes    = var.subnet_prefixes
+  subnet_names       = var.subnet_names
+  tags               = var.tags
+
+  depends_on = [module.resource_group]
 }
 
-module "route_table" {
-  source              = "./modules/route_table"
-  route_table_name    = var.route_table_name
-  route_table_location = module.resource_group.rg_location
-  routes              = var.routes
+module "security" {
+  source              = "./modules/security"
+  resource_group_name = module.resource_group.name
+  location           = module.resource_group.location
+  vnet_name          = module.networking.vnet_name
+  subnet_ids         = module.networking.subnet_ids
+  tags               = var.tags
+
+  depends_on = [module.networking]
+}
+
+module "gateway" {
+  source              = "./modules/gateway"
+  resource_group_name = module.resource_group.name
+  location           = module.resource_group.location
+  vnet_name          = module.networking.vnet_name
+  gateway_subnet_id   = module.networking.gateway_subnet_id
+  tags               = var.tags
+
+  depends_on = [module.networking]
 }

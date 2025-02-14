@@ -34,24 +34,6 @@ variable "gateway_subnet_prefix" {
   default     = "10.0.255.0/24"
 }
 
-variable "gateway_type" {
-  description = "Type of the Virtual Network Gateway (Vpn or ExpressRoute)"
-  type        = string
-  default     = "Vpn"
-}
-
-variable "vpn_type" {
-  description = "Type of VPN Gateway (RouteBased or PolicyBased)"
-  type        = string
-  default     = "RouteBased"
-}
-
-variable "gateway_sku" {
-  description = "SKU of the Virtual Network Gateway"
-  type        = string
-  default     = "VpnGw1"
-}
-
 variable "tags" {
   description = "Tags to apply to resources"
   type        = map(string)
