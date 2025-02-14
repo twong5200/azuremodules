@@ -20,23 +20,23 @@ module "resource_group" {
 }
 
 module "networking" {
-  source              = "./modules/networking"
-  resource_group_name = var.resource_group_name
-  location           = var.location
-  vnet_name          = var.vnet_name
-  address_space      = var.address_space
-  subnet_prefixes    = var.subnet_prefixes
-  subnet_names       = var.subnet_names
+  source               = "./modules/networking"
+  vnet_name           = var.vnet_name
+  resource_group_name = module.resource_group.name
+  location            = module.resource_group.location
+  address_space       = var.address_space
+  subnet_prefixes     = var.subnet_prefixes
+  subnet_names        = var.subnet_names
   gateway_subnet_prefix = var.gateway_subnet_prefix
-  tags               = var.tags
+  tags                = var.tags
 
   depends_on = [module.resource_group]
 }
 
 module "security" {
   source              = "./modules/security"
-  resource_group_name = var.resource_group_name
-  location           = var.location
+  resource_group_name = module.resource_group.name
+  location            = module.resource_group.location
   vnet_name          = module.networking.vnet_name
   subnet_ids         = module.networking.subnet_ids
   tags               = var.tags
@@ -46,8 +46,8 @@ module "security" {
 
 module "gateway" {
   source              = "./modules/gateway"
-  resource_group_name = var.resource_group_name
-  location           = var.location
+  resource_group_name = module.resource_group.name
+  location            = module.resource_group.location
   vnet_name          = module.networking.vnet_name
   gateway_subnet_id   = module.networking.gateway_subnet_id
   gateway_type       = var.gateway_type
