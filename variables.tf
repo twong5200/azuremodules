@@ -40,10 +40,6 @@ variable "subnets" {
     {
       name          = "subnet3"
       address_prefix = "10.0.3.0/24"
-    },
-    {
-      name          = "subnet4"
-      address_prefix = "10.0.4.0/24"
     }
   ]
 }
